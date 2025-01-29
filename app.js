@@ -36,20 +36,28 @@ app.get("/", (req, res) => {
 });
 
 app.get("/news/:url", (req, res) => {
+  console.log("Hello Saurab");
   const newsUrl = decodeURIComponent(req.params.url);
   const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  console.log(fullUrl);
 
   axios.get(newsUrl).then((response) => {
     const html = response.data;
     const $ = cheerio.load(html);
     const imageUrl = $(".post-thumbnail img").attr("src");
     const title = $(".entry-title").text().trim();
+    console.log(imageUrl);
+    console.log(title);
+    
+
+
     const paragraphs = $(".ok18-single-post-content-wrap p")
       .map((_, p) => $(p).text().trim())
       .get()
       .filter((text) => text && text !== "&nbsp;");
       const description=paragraphs[0];
 
+      console.log(paragraphs);
     const newsDate = $(".ok-news-post-hour span").text().trim();
 
     res.status(200).render("news", {
