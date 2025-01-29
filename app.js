@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const axios = require("axios");
 const cheerio = require("cheerio");
-const PORT = 3000;
+const PORT = process.env.PORT||8080;
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
