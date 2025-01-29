@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Data Viewer</title>
+    <style>
+        body {
+            
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .navbar {
+        background-color: #0066cc;
+        padding: 1rem 2rem;
+        width: 100%;
+        top: 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .logo-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      .site-name {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: #93c5fd;
+      }
+
+      .hamburger {
+        display: none;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          position: fixed;
+        }
+
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background-color: #1e3a8a;
+          flex-direction: column;
+          padding: 1rem;
+          gap: 1rem;
+        }
+        #news-container {
+          margin-top: 100px;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: block;
+        }
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+
+      .market-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        background-color: #f0f2f5;
+        color: #333;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .market-btn:hover {
+        background-color: #e4e6e9;
+      }
+
+      .market-btn.active {
+        background-color: #0066cc;
+        color: white;
+      }
+      
+      .data-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #555;
+      }
+
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+
+      .positive {
+        color: #28a745;
+      }
+
+      .negative {
+        color: #dc3545;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 20px;
+        font-size: 18px;
+        color: #666;
+      }
+
+      @media (max-width: 768px) {
+        .button-group {
+          flex-direction: column;
+        }
+
+        .market-btn {
+          width: 100%;
+        }
+
+    }
+
+    @media (max-width: 768px) {
+       .container{
+        margin-top: 100px;
+       }
+
+    }
+      .search-container {
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e4e6e9;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #0066cc;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        font-style: italic;
+      }
+
+      
+      /* Keep your existing footer styles */
+      .news-footer {
+        background-color: #0066cc;
+        color: #fff;
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .news-footer p {
+        margin: 5px 0;
+        font-size: 20px;
+      }
+
+      .news-footer a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .news-footer a:hover {
+        text-decoration: underline;
+      }
+
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-container">
+         <a href="/"> <img src="/logo.png" alt="Update Damak Logo" class="logo-img" /></a>
+          <span class="site-name">Update Damak</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <!-- <a href="/sports">Sports</a>
+          <a href="/economic">Economic</a> -->
+          <a href="/stock-market">Stock Market</a>
+        </div>
+
+        <button class="hamburger">☰</button>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="button-group">
+        <button class="market-btn active" data-type="gainers">
+          Top Gainers
+        </button>
+        <button class="market-btn" data-type="losers">Top Losers</button>
+        <button class="market-btn" data-type="brokers">Top Brokers</button>
+        <button class="market-btn" data-type="transactions">
+          Top Transactions
+        </button>
+        <button class="market-btn" data-type="turnovers">Top Turnovers</button>
+      </div>
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search in table..."
+          id="searchInput"
+        />
+      </div>
+      <div class="data-container">
+        <div id="marketData"></div>
+      </div>
+    </div>
+
+      <!-- Keeping your existing footer -->
+      <footer class="news-footer">
+        <div class="footer-content">
+          <p>&copy; 2023 Update Damak News Portal.</p>
+          <p>
+            Stock details obtained from
+            <a
+              href="https://www.sharesansar.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Sharesansar.com</a
+            >. Credit goes to Sharesansar for the stock details.
+          </p>
+        </div>
+      </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".market-btn");
+        const marketData = document.getElementById("marketData");
+        const searchInput = document.getElementById("searchInput");
+        let currentData = []; // Store current data for filtering
+
+        // Fetch initial data (Top Gainers)
+        fetchData("gainers");
+
+        // Add click event listeners to all buttons
+        buttons.forEach((button) => {
+          button.addEventListener("click", function () {
+            buttons.forEach((btn) => btn.classList.remove("active"));
+            this.classList.add("active");
+            searchInput.value = ""; // Clear search when switching categories
+            fetchData(this.dataset.type);
+          });
+        });
+
+        // Add search functionality
+        searchInput.addEventListener("input", function () {
+          const searchTerm = this.value.toLowerCase();
+          filterAndDisplayData(searchTerm);
+        });
+
+        async function fetchData(type) {
+          marketData.innerHTML = '<div class="loading">Loading data...</div>';
+
+          try {
+            const response = await fetch(`/api/market-data/${type}`);
+            currentData = await response.json();
+            displayData(type, currentData);
+          } catch (error) {
+            marketData.innerHTML = `<div class="loading">Error loading data. Please try again.</div>`;
+          }
+        }
+
+        function filterAndDisplayData(searchTerm) {
+          const activeButton = document.querySelector(".market-btn.active");
+          const currentType = activeButton.dataset.type;
+
+          if (!searchTerm) {
+            displayData(currentType, currentData);
+            return;
+          }
+
+          const filteredData = currentData.filter((item) => {
+            return Object.values(item).some((value) =>
+              String(value).toLowerCase().includes(searchTerm)
+            );
+          });
+
+          displayData(currentType, filteredData);
+        }
+
+        function displayData(type, data) {
+          if (data.length === 0) {
+            marketData.innerHTML =
+              '<div class="no-results">No matching results found</div>';
+            return;
+          }
+
+          let tableHTML = "";
+
+          switch (type) {
+            case "gainers":
+            case "losers":
+              tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Price</th>
+                                <th>Change</th>
+                                <th>% Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data
+                              .map(
+                                (item) => `
+                                <tr>
+                                    <td>${item.symbol}</td>
+                                    <td>${item.close}</td>
+                                    <td class="${
+                                      type === "gainers"
+                                        ? "positive"
+                                        : "negative"
+                                    }">
+                                        ${type === "gainers" ? "+" : ""}${
+                                  item.change_pts
+                                }
+                                    </td>
+                                    <td class="${
+                                      type === "gainers"
+                                        ? "positive"
+                                        : "negative"
+                                    }">
+                                        ${type === "gainers" ? "+" : ""}${
+                                  item.diff_per
+                                }%
+                                    </td>
+                                </tr>
+                            `
+                              )
+                              .join("")}
+                        </tbody>
+                    </table>
+                `;
+              break;
+
+            case "brokers":
+              tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Number</th>
+                                <th>Broker</th>
+                                <th>Buy Amount</th>
+                                <th>Sell Amount</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data
+                              .map(
+                                (item) => `
+                                <tr>
+                                    <td>${item.number}</td>
+                                    <td>${item.name}</td>
+                                    <td>${item.buyerAmount}</td>
+                                    <td>${item.sellerAmount}</td>
+                                    <td>${item.totalAmount}</td>
+                                </tr>
+                            `
+                              )
+                              .join("")}
+                        </tbody>
+                    </table>
+                `;
+              break;
+
+            case "turnovers":
+              tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Company</th>
+                                <th>Turnover</th>
+                                <th>LTP(Rs.)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data
+                              .map(
+                                (item) => `
+                                <tr>
+                                    <td>${item.symbol}</td>
+                                    <td>${item.companyname}</td>
+                                    <td>${item.traded_amount}</td>
+                                    <td>${item.close}</td>
+                                </tr>
+                            `
+                              )
+                              .join("")}
+                        </tbody>
+                    </table>
+                `;
+              break;
+
+            case "transactions":
+              tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Company</th>
+                                <th>Volume</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data
+                              .map(
+                                (item) => `
+                                <tr>
+                                    <td>${item.symbol}</td>
+                                    <td>${item.companyname}</td>
+                                    <td>${item.no_trade}</td>
+                                    <td>${item.close}</td>
+                                </tr>
+                            `
+                              )
+                              .join("")}
+                        </tbody>
+                    </table>
+                `;
+              break;
+          }
+
+          marketData.innerHTML = tableHTML;
+        }
+      });
+    </script>
+  </body>
+</html>

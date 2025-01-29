@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Damak - Home</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .navbar {
+        background-color: #0066cc;
+        padding: 1rem 2rem;
+        width: 100%;
+        top: 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logo-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      .site-name {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: #93c5fd;
+      }
+
+      .hamburger {
+        display: none;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          position: fixed;
+        }
+
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background-color: #0066cc;
+          flex-direction: column;
+          padding: 1rem;
+          gap: 1rem;
+        }
+        #news-container {
+          margin-top: 100px;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: block;
+        }
+      }
+      .hero-section {
+        position: relative;
+        width: 100%;
+        height: 600px;
+        overflow: hidden;
+      }
+
+      .hero-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 2;
+        color: #0066cc; /* Blue color */
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 2rem;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 800px;
+      }
+
+      .hero-content h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #003399; /* Darker blue for heading */
+      }
+
+      .hero-content p {
+        font-size: 1.9rem;
+        color: #003399; /* Blue color for paragraph */
+      }
+
+      .carousel-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .carousel-track {
+        position: relative;
+        height: 100%;
+      }
+
+      .carousel-slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .carousel-slide.active {
+        opacity: 1;
+      }
+
+      .carousel-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      /* Trending News Section */
+      .trending-news {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .section-title {
+        font-size: 2rem;
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .trending-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .trending-card {
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .trending-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .trending-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .trending-content {
+        padding: 20px;
+      }
+
+      .trending-content h3 {
+        font-size: 1.25rem;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .trending-content p {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 15px;
+      }
+
+      .meta-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #888;
+      }
+
+      .read-more {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .read-more:hover {
+        text-decoration: underline;
+      }
+
+      /* Keep your existing footer styles */
+      .news-footer {
+        background-color: #0066cc;
+        color: #fff;
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .news-footer p {
+        margin: 5px 0;
+        font-size: 20px;
+      }
+
+      .news-footer a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .news-footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .hero-section {
+          display: none;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          position: fixed;
+        }
+
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background-color: #1e3a8a;
+          flex-direction: column;
+          padding: 1rem;
+          gap: 1rem;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: block;
+        }
+
+        .hero-content h1 {
+          font-size: 2rem;
+        }
+
+        .featured-news {
+          grid-template-columns: 1fr;
+        }
+
+        .trending-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Keeping your existing navbar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-container">
+         <a href="/"> <img src="/logo.png" alt="Update Damak Logo" class="logo-img" /></a>
+          <span class="site-name">Update Damak</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="/" class="active">Home</a>
+          <!-- <a href="/sports">Sports</a>
+          <a href="/economic">Economic</a> -->
+          <a href="/stock-market">Stock Market</a>
+        </div>
+
+        <button class="hamburger">☰</button>
+      </div>
+    </nav>
+
+    <main id="news-container">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <h1>Welcome to Update Damak</h1>
+          <p>
+            Your trusted source for local and national news, sports updates, and
+            market insights
+          </p>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <div class="carousel-slide active">
+              <img
+                src="https://assets-api.kathmandupost.com/thumb.php?src=https://assets-cdn.kathmandupost.com/uploads/source/news/2024/news/Untitled13-1726276317.jpg&w=900&height=601"
+                alt="damak image"
+              />
+            </div>
+            <div class="carousel-slide">
+              <img
+                src="https://nepaltraveller.com/uploads/destination/damak.jpg"
+                alt="Sports Updates"
+              />
+            </div>
+            <div class="carousel-slide">
+              <img src="/carou3.jpg" alt="Market Insights" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category Filters -->
+      <!-- <div class="category-filters">
+            <button class="category-btn active">All News</button>
+            <button class="category-btn">Latest</button>
+            <button class="category-btn">Popular</button>
+            <button class="category-btn">Featured</button>
+        </div> -->
+      <section class="trending-news">
+        <h2 class="section-title">Trending News</h2>
+        <div class="trending-grid">
+          <% if(data.length > 0) { %> <% data.forEach((news, index) => { %>
+          <article class="trending-card">
+            <!-- News Image -->
+            <img
+              src="<%= news.post_image || news.image %>"
+              alt="<%= news.title %>"
+              class="trending-image"
+            />
+
+            <!-- News Content -->
+            <div class="trending-content">
+              <h3><%= news.title %></h3>
+              <p><%= news.excerpt %></p>
+              <div class="meta-info">
+                <span><%= news.nepali_date %></span>
+                <a
+                  href="/news/<%= encodeURIComponent(news.link) %>"
+                  class="read-more"
+                  >Read More →</a
+                >
+              </div>
+            </div>
+          </article>
+          <% }) %> <% } else { %>
+          <p style="color: #666; text-align: center">
+            No trending news available at the moment.
+          </p>
+          <% } %>
+        </div>
+      </section>
+    </main>
+
+    <!-- Keeping your existing footer -->
+    <footer class="news-footer">
+      <div class="footer-content">
+        <p>&copy; 2023 Update Damak News Portal.</p>
+        <p>
+          News obtained from
+          <a
+            href="https://www.onlinekhabar.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Onlinekhabar.com</a
+          >. Credit goes to Onlinekhabar for the news content.
+        </p>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      let currentSlide = 0;
+      const slides = document.querySelectorAll(".carousel-slide");
+      const dots = document.querySelectorAll(".dot");
+
+      function showSlide(n) {
+        // Remove active class from all slides and dots
+        slides.forEach((slide) => slide.classList.remove("active"));
+        dots.forEach((dot) => dot.classList.remove("active"));
+
+        // Set active slide and dot
+        slides[n].classList.add("active");
+        dots[n].classList.add("active");
+      }
+
+      function moveSlide(direction) {
+        currentSlide =
+          (currentSlide + direction + slides.length) % slides.length;
+        showSlide(currentSlide);
+      }
+
+      function setSlide(n) {
+        currentSlide = n;
+        showSlide(currentSlide);
+      }
+
+      // Auto advance slides every 5 seconds
+      setInterval(() => {
+        moveSlide(1);
+      }, 5000);
+
+      // Keeping your existing hamburger menu script
+      const hamburger = document.querySelector(".hamburger");
+      const navLinks = document.querySelector(".nav-links");
+
+      hamburger.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+        hamburger.textContent = navLinks.classList.contains("active")
+          ? "✕"
+          : "☰";
+      });
+
+      // Add category filter functionality
+      const categoryButtons = document.querySelectorAll(".category-btn");
+      categoryButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          categoryButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          // Add your filtering logic here
+        });
+      });
+    </script>
+  </body>
+</html>
