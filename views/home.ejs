@@ -361,13 +361,7 @@
         </div>
       </section>
 
-      <!-- Category Filters -->
-      <!-- <div class="category-filters">
-            <button class="category-btn active">All News</button>
-            <button class="category-btn">Latest</button>
-            <button class="category-btn">Popular</button>
-            <button class="category-btn">Featured</button>
-        </div> -->
+
       <section class="trending-news">
         <h2 class="section-title">Trending News</h2>
         <div class="trending-grid">
@@ -422,16 +416,12 @@
     <script>
       let currentSlide = 0;
       const slides = document.querySelectorAll(".carousel-slide");
-      const dots = document.querySelectorAll(".dot");
 
       function showSlide(n) {
         // Remove active class from all slides and dots
         slides.forEach((slide) => slide.classList.remove("active"));
-        dots.forEach((dot) => dot.classList.remove("active"));
-
         // Set active slide and dot
         slides[n].classList.add("active");
-        dots[n].classList.add("active");
       }
 
       function moveSlide(direction) {
